@@ -42,54 +42,53 @@ export function HeroSection({ onSelectCourse, onOpenAuth, onScrollToCatalog }: H
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-stretch">
 
           {/* Left Column: Bold Typography & Content */}
-          <div className="lg:col-span-6 flex flex-col justify-between h-full">
-            <div className="space-y-6">
-              {/* Main Editorial Headline dengan jeda profesional */}
-              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-zinc-950 leading-[1.22] sm:leading-[1.18]">
-                Kuasai Keterampilan Perkantoran & UMKM <br className="hidden sm:inline" />
-                untuk Karier Nyata.
-              </h1>
+          <div className="lg:col-span-6 flex flex-col justify-between space-y-6">
 
-              {/* Value Proposition Micro Bullets with Directional Arrows */}
-              <div className="space-y-2 text-sm text-zinc-600 font-medium">
-                <div className="flex items-center gap-2">
-                  <span className="text-zinc-900 font-bold">●</span>
-                  <span>Materi praktis per modul berurutan, video & file PDF terstruktur →</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className="text-sky-600 font-bold">↓</span>
-                  <span>Kuis pilihan ganda otomatis, batas 3 percobaan (BR-09, BR-10)</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className="text-emerald-600 font-bold">&</span>
-                  <span>Sertifikat bernomor resmi <strong className="text-zinc-900">PA-2026-XXXX</strong> terbit otomatis ↑</span>
-                </div>
+            {/* Main Editorial Headline dengan jeda profesional */}
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-zinc-950 leading-[1.22] sm:leading-[1.18]">
+              Kuasai Keterampilan Perkantoran & UMKM <br className="hidden sm:inline" />
+              untuk Karier Nyata.
+            </h1>
+
+            {/* Value Proposition Micro Bullets with Directional Arrows */}
+            <div className="space-y-2 text-sm text-zinc-600 font-medium">
+              <div className="flex items-center gap-2">
+                <span className="text-zinc-900 font-bold">●</span>
+                <span>Materi praktis per modul berurutan, video & file PDF terstruktur →</span>
               </div>
-
-              {/* CTAs */}
-              <div className="flex flex-wrap items-center gap-3 pt-2">
-                <button
-                  onClick={onScrollToCatalog}
-                  className="px-6 py-3 rounded-full text-sm font-bold bg-[#bef264] hover:bg-[#a3e635] text-zinc-950 shadow-md hover:shadow-lg transition-all flex items-center gap-2 group"
-                >
-                  <span>Lihat Katalog Kursus</span>
-                  <span className="w-6 h-6 rounded-full bg-zinc-950 text-white flex items-center justify-center group-hover:translate-x-0.5 transition-transform">
-                    <ArrowUpRight className="w-3.5 h-3.5" />
-                  </span>
-                </button>
-
-                <button
-                  onClick={() => onOpenAuth("register")}
-                  className="px-5 py-3 rounded-full text-sm font-semibold border-2 border-zinc-900 hover:bg-zinc-900 hover:text-white text-zinc-900 transition-all flex items-center gap-1.5"
-                >
-                  Daftar Akun Peserta
-                  <ArrowRight className="w-4 h-4" />
-                </button>
+              <div className="flex items-center gap-2">
+                <span className="text-sky-600 font-bold">↓</span>
+                <span>Kuis pilihan ganda otomatis, batas 3 percobaan (BR-09, BR-10)</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-emerald-600 font-bold">&</span>
+                <span>Sertifikat bernomor resmi <strong className="text-zinc-900">PA-2026-XXXX</strong> terbit otomatis ↑</span>
               </div>
             </div>
 
+            {/* CTAs */}
+            <div className="flex flex-wrap items-center gap-3 pt-2">
+              <button
+                onClick={onScrollToCatalog}
+                className="px-6 py-3 rounded-full text-sm font-bold bg-[#bef264] hover:bg-[#a3e635] text-zinc-950 shadow-md hover:shadow-lg transition-all flex items-center gap-2 group"
+              >
+                <span>Lihat Katalog Kursus</span>
+                <span className="w-6 h-6 rounded-full bg-zinc-950 text-white flex items-center justify-center group-hover:translate-x-0.5 transition-transform">
+                  <ArrowUpRight className="w-3.5 h-3.5" />
+                </span>
+              </button>
+
+              <button
+                onClick={() => onOpenAuth("register")}
+                className="px-5 py-3 rounded-full text-sm font-semibold border-2 border-zinc-900 hover:bg-zinc-900 hover:text-white text-zinc-900 transition-all flex items-center gap-1.5"
+              >
+                Daftar Akun Peserta
+                <ArrowRight className="w-4 h-4" />
+              </button>
+            </div>
+
             {/* Interactive Mini Thumbnail Carousel (inspired by download.jpeg) */}
-            <div className="pt-6 border-t border-zinc-100 mt-6">
+            <div className="pt-4 border-t border-zinc-100">
               <div className="flex items-center justify-between mb-2.5">
                 <span className="text-xs font-semibold text-zinc-500 uppercase tracking-wider">
                   Pratinjau Kursus Terbit
@@ -124,8 +123,8 @@ export function HeroSection({ onSelectCourse, onOpenAuth, onScrollToCatalog }: H
                       key={course.id}
                       onClick={() => setCurrentSlideIndex(idx)}
                       className={`text-left p-2 rounded-2xl border transition-all ${isActive
-                          ? "bg-zinc-950 text-white border-zinc-950 shadow-md scale-[1.02]"
-                          : "bg-zinc-50 hover:bg-zinc-100 text-zinc-800 border-zinc-200"
+                        ? "bg-zinc-950 text-white border-zinc-950 shadow-md scale-[1.02]"
+                        : "bg-zinc-50 hover:bg-zinc-100 text-zinc-800 border-zinc-200"
                         }`}
                     >
                       <div className="text-[10px] uppercase font-bold tracking-wider truncate text-zinc-400">
@@ -155,8 +154,8 @@ export function HeroSection({ onSelectCourse, onOpenAuth, onScrollToCatalog }: H
           </div>
 
           {/* Right Column: High-Impact Visual Frame with Floating Elements */}
-          <div className="lg:col-span-6 flex flex-col h-full self-stretch">
-            <div className="relative w-full flex-1 min-h-[520px] sm:min-h-[600px] lg:min-h-[680px] rounded-[28px] sm:rounded-[36px] overflow-hidden border border-zinc-200/90 shadow-2xl group bg-zinc-100">
+          <div className="lg:col-span-6 relative flex flex-col">
+            <div className="relative w-full h-full min-h-[500px] sm:min-h-[580px] lg:min-h-full rounded-[28px] sm:rounded-[36px] overflow-hidden border border-zinc-200/90 shadow-2xl group bg-zinc-100">
 
               {/* Photo Image */}
               <Image
