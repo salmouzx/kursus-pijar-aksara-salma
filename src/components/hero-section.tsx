@@ -39,7 +39,7 @@ export function HeroSection({ onSelectCourse, onOpenAuth, onScrollToCatalog }: H
   return (
     <section className="w-full bg-white pt-8 sm:pt-14 lg:pt-16 pb-12 sm:pb-16 border-b border-zinc-100">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-stretch">
           
           {/* Left Column: Bold Typography & Content */}
           <div className="lg:col-span-6 flex flex-col justify-between space-y-6">
@@ -155,8 +155,8 @@ export function HeroSection({ onSelectCourse, onOpenAuth, onScrollToCatalog }: H
           </div>
 
           {/* Right Column: High-Impact Visual Frame with Floating Elements */}
-          <div className="lg:col-span-6 relative">
-            <div className="relative aspect-[4/3] sm:aspect-[16/11] rounded-[28px] sm:rounded-[36px] overflow-hidden border border-zinc-200/90 shadow-2xl group bg-zinc-100">
+          <div className="lg:col-span-6 relative flex flex-col">
+            <div className="relative w-full h-full min-h-[500px] sm:min-h-[580px] lg:min-h-full rounded-[28px] sm:rounded-[36px] overflow-hidden border border-zinc-200/90 shadow-2xl group bg-zinc-100">
               
               {/* Photo Image */}
               <Image
