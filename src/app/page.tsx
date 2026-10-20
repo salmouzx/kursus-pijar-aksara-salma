@@ -60,7 +60,7 @@ export default function HomePage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#f1f5f9] flex flex-col selection:bg-[#bef264] selection:text-zinc-950 font-sans">
+    <div className="min-h-screen bg-white flex flex-col selection:bg-[#bef264] selection:text-zinc-950 font-sans">
       
       {/* Top Banner when a user/role is active */}
       {currentUser && (

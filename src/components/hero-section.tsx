@@ -37,36 +37,16 @@ export function HeroSection({ onSelectCourse, onOpenAuth, onScrollToCatalog }: H
   };
 
   return (
-    <section className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4 pb-12">
-      {/* Outer Squircle Container - inspired by download.jpeg layout */}
-      <div className="bg-white rounded-[32px] sm:rounded-[40px] border border-zinc-200/90 shadow-xl overflow-hidden p-6 sm:p-8 lg:p-12 transition-all">
+    <section className="w-full bg-white pt-2 sm:pt-6 pb-12 sm:pb-16 border-b border-zinc-100">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
           
           {/* Left Column: Bold Typography & Content */}
           <div className="lg:col-span-6 flex flex-col justify-between space-y-6">
             
-            {/* Top pill badge */}
-            <div className="flex flex-wrap items-center gap-2">
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-sky-50 text-sky-800 border border-sky-200/60">
-                <span className="w-2 h-2 rounded-full bg-sky-500 animate-ping"></span>
-                Lembaga Kursus Resmi · Depok & Online
-              </span>
-              <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium bg-zinc-100 text-zinc-600 border border-zinc-200">
-                Tahun Ajaran 2026
-              </span>
-            </div>
-
-            {/* Main Editorial Headline with Pill Capsules (inspired by download (1).jpeg) */}
+            {/* Main Editorial Headline */}
             <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-zinc-950 leading-[1.18]">
-              Kuasai Keterampilan{" "}
-              <span className="pill-outline bg-sky-50/70 text-sky-950 border-sky-950 mx-1">
-                Perkantoran
-              </span>{" "}
-              &{" "}
-              <span className="pill-outline bg-[#bef264]/40 text-zinc-950 border-zinc-950 mx-1">
-                UMKM
-              </span>{" "}
-              untuk Karier Nyata.
+              Kuasai Keterampilan Perkantoran & UMKM untuk Karier Nyata.
             </h1>
 
             {/* Dotted separator with centered oval index (inspired by download.jpeg) */}

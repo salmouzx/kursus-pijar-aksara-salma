@@ -26,15 +26,7 @@ export function FeaturesOrganicSection({ onSelectCourse, onScrollToCatalog }: Fe
             <span>Fokus Pembelajaran Vokasi</span>
           </div>
           <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-zinc-950 leading-tight">
-            Membantu{" "}
-            <span className="pill-outline bg-sky-100/70 border-zinc-900 mx-1">
-              staf kantor
-            </span>{" "}
-            &{" "}
-            <span className="pill-outline bg-[#bef264]/50 border-zinc-900 mx-1">
-              pelaku UMKM
-            </span>{" "}
-            menguasai keahlian siap pakai.
+            Membantu staf kantor & pelaku UMKM menguasai keahlian siap pakai.
           </h2>
         </div>
 
