@@ -37,7 +37,7 @@ export function HeroSection({ onSelectCourse, onOpenAuth, onScrollToCatalog }: H
   };
 
   return (
-    <section className="w-full bg-white pt-2 sm:pt-6 pb-12 sm:pb-16 border-b border-zinc-100">
+    <section className="w-full bg-white pt-8 sm:pt-14 lg:pt-16 pb-12 sm:pb-16 border-b border-zinc-100">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
           
