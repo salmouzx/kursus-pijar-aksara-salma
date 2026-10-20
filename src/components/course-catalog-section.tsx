@@ -209,6 +209,7 @@ export function CourseCatalogSection({ onSelectCourse, onEnrollCourse }: CourseC
                           src={course.instrukturAvatar}
                           alt={course.instrukturNama}
                           fill
+                          sizes="24px"
                           className="object-cover"
                         />
                       </div>

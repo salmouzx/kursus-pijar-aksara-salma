@@ -98,6 +98,7 @@ export function CourseDetailModal({ kursus, isOpen, onClose, onEnroll }: CourseD
                 src={kursus.instrukturAvatar}
                 alt={kursus.instrukturNama}
                 fill
+                sizes="48px"
                 className="object-cover"
               />
             </div>

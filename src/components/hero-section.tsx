@@ -191,6 +191,7 @@ export function HeroSection({ onSelectCourse, onOpenAuth, onScrollToCatalog }: H
                 alt="Ruang Belajar Digital Pijar Aksara"
                 fill
                 priority
+                loading="eager"
                 className="object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
                 sizes="(max-width: 768px) 100vw, 50vw"
               />
