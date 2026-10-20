@@ -44,18 +44,11 @@ export function HeroSection({ onSelectCourse, onOpenAuth, onScrollToCatalog }: H
           {/* Left Column: Bold Typography & Content */}
           <div className="lg:col-span-6 flex flex-col justify-between space-y-6">
             
-            {/* Main Editorial Headline */}
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-zinc-950 leading-[1.18]">
-              Kuasai Keterampilan Perkantoran & UMKM untuk Karier Nyata.
+            {/* Main Editorial Headline dengan jeda profesional */}
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-zinc-950 leading-[1.22] sm:leading-[1.18]">
+              Kuasai Keterampilan Perkantoran & UMKM <br className="hidden sm:inline" />
+              untuk Karier Nyata.
             </h1>
-
-            {/* Dotted separator with centered oval index (inspired by download.jpeg) */}
-            <div className="relative flex items-center justify-center my-1">
-              <div className="w-full border-t border-dashed border-zinc-300"></div>
-              <span className="absolute bg-white px-3 py-0.5 rounded-full border border-zinc-200 text-[11px] font-mono text-zinc-500 font-semibold shadow-xs">
-                {String(currentSlideIndex + 1).padStart(2, "0")} / 04
-              </span>
-            </div>
 
             {/* Value Proposition Micro Bullets with Directional Arrows */}
             <div className="space-y-2 text-sm text-zinc-600 font-medium">
