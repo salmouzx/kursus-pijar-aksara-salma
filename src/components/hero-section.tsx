@@ -179,12 +179,33 @@ export function HeroSection({ onSelectCourse, onOpenAuth, onScrollToCatalog }: H
                 </div>
               </div>
 
-              {/* Top Right Urgent Seat Badge (BR-06 Highlight) */}
-              <div className="absolute top-4 right-4">
-                <div className="bg-red-500/90 backdrop-blur-md px-3.5 py-1.5 rounded-full border border-red-300 shadow-md text-xs font-bold text-white flex items-center gap-1.5 animate-pulse">
-                  <span className="w-2 h-2 rounded-full bg-white"></span>
-                  <span>Sisa 1 Kursi: Dasar Pembukuan</span>
+              {/* Top Right Stack: Urgent Badge + Course Preview Card (Di Bawah Pas Badge) */}
+              <div className="absolute top-4 right-4 flex flex-col items-end gap-2 z-20 w-[240px] sm:w-[250px]">
+                {/* Urgent Seat Badge */}
+                <div className="w-full bg-red-500/95 backdrop-blur-md px-3.5 py-1.5 rounded-full border border-red-300 shadow-md text-xs font-bold text-white flex items-center justify-center gap-1.5 animate-pulse">
+                  <span className="w-2 h-2 rounded-full bg-white shrink-0"></span>
+                  <span className="truncate">Sisa 1 Kursi: Dasar Pembukuan</span>
                 </div>
+
+                {/* Course Preview Card (Lebar serasi pas dengan badge di atas) */}
+                <button
+                  onClick={() => onSelectCourse(currentCourse)}
+                  className="w-full bg-white/95 backdrop-blur-md p-3.5 rounded-[22px] border border-zinc-200/90 shadow-xl hover:scale-[1.02] transition-all text-left group/card"
+                >
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="text-[10px] font-bold text-sky-700 uppercase tracking-wider">{currentCourse.kategori}</span>
+                    <ArrowUpRight className="w-3.5 h-3.5 text-zinc-950 group-hover/card:translate-x-0.5 group-hover/card:-translate-y-0.5 transition-transform" />
+                  </div>
+                  <h4 className="text-xs font-bold text-zinc-900 leading-snug line-clamp-2">
+                    {currentCourse.judul}
+                  </h4>
+                  <div className="mt-2.5 pt-2 border-t border-zinc-100 flex items-center justify-between text-[11px]">
+                    <span className="font-extrabold text-zinc-950">
+                      {currentCourse.harga === 0 ? "Gratis" : `Rp ${currentCourse.harga.toLocaleString("id-ID")}`}
+                    </span>
+                    <span className="text-zinc-500 font-medium">Sisa {currentCourse.sisaKursi}</span>
+                  </div>
+                </button>
               </div>
 
               {/* Conversational Floating Chat Bubbles (inspired by Prospera download (1).jpeg) */}
@@ -232,27 +253,6 @@ export function HeroSection({ onSelectCourse, onOpenAuth, onScrollToCatalog }: H
                 ))}
               </div>
 
-              {/* Bottom Right CTA Trigger Card */}
-              <div className="absolute top-1/2 -translate-y-1/2 right-4 hidden sm:block">
-                <button
-                  onClick={() => onSelectCourse(currentCourse)}
-                  className="bg-white/95 backdrop-blur-md p-3.5 rounded-3xl border border-zinc-200/80 shadow-xl hover:scale-105 transition-all text-left max-w-[190px] group/card"
-                >
-                  <div className="flex items-center justify-between mb-1">
-                    <span className="text-[10px] font-bold text-sky-700 uppercase">{currentCourse.kategori}</span>
-                    <ArrowUpRight className="w-3.5 h-3.5 text-zinc-950 group-hover/card:translate-x-0.5 transition-transform" />
-                  </div>
-                  <h4 className="text-xs font-bold text-zinc-900 leading-tight line-clamp-2">
-                    {currentCourse.judul}
-                  </h4>
-                  <div className="mt-2 pt-2 border-t border-zinc-100 flex items-center justify-between text-[11px]">
-                    <span className="font-bold text-zinc-950">
-                      {currentCourse.harga === 0 ? "Gratis" : `Rp ${currentCourse.harga.toLocaleString("id-ID")}`}
-                    </span>
-                    <span className="text-zinc-500 font-medium">Sisa {currentCourse.sisaKursi}</span>
-                  </div>
-                </button>
-              </div>
 
             </div>
           </div>
