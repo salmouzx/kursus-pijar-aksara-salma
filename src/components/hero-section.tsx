@@ -2,15 +2,15 @@
 
 import React, { useState } from "react";
 import Image from "next/image";
-import { 
-  ArrowRight, 
-  ArrowUpRight, 
-  ChevronLeft, 
-  ChevronRight, 
-  CheckCircle2, 
-  Sparkles, 
-  Users, 
-  Clock, 
+import {
+  ArrowRight,
+  ArrowUpRight,
+  ChevronLeft,
+  ChevronRight,
+  CheckCircle2,
+  Sparkles,
+  Users,
+  Clock,
   Award,
   Play,
   Volume2,
@@ -40,10 +40,10 @@ export function HeroSection({ onSelectCourse, onOpenAuth, onScrollToCatalog }: H
     <section className="w-full bg-white pt-8 sm:pt-14 lg:pt-16 pb-12 sm:pb-16 border-b border-zinc-100">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-stretch">
-          
+
           {/* Left Column: Bold Typography & Content */}
           <div className="lg:col-span-6 flex flex-col justify-between space-y-6">
-            
+
             {/* Main Editorial Headline dengan jeda profesional */}
             <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-zinc-950 leading-[1.22] sm:leading-[1.18]">
               Kuasai Keterampilan Perkantoran & UMKM <br className="hidden sm:inline" />
@@ -122,11 +122,10 @@ export function HeroSection({ onSelectCourse, onOpenAuth, onScrollToCatalog }: H
                     <button
                       key={course.id}
                       onClick={() => setCurrentSlideIndex(idx)}
-                      className={`text-left p-2 rounded-2xl border transition-all ${
-                        isActive
+                      className={`text-left p-2 rounded-2xl border transition-all ${isActive
                           ? "bg-zinc-950 text-white border-zinc-950 shadow-md scale-[1.02]"
                           : "bg-zinc-50 hover:bg-zinc-100 text-zinc-800 border-zinc-200"
-                      }`}
+                        }`}
                     >
                       <div className="text-[10px] uppercase font-bold tracking-wider truncate text-zinc-400">
                         {course.kategori}
@@ -157,7 +156,7 @@ export function HeroSection({ onSelectCourse, onOpenAuth, onScrollToCatalog }: H
           {/* Right Column: High-Impact Visual Frame with Floating Elements */}
           <div className="lg:col-span-6 relative flex flex-col">
             <div className="relative w-full h-full min-h-[500px] sm:min-h-[580px] lg:min-h-full rounded-[28px] sm:rounded-[36px] overflow-hidden border border-zinc-200/90 shadow-2xl group bg-zinc-100">
-              
+
               {/* Photo Image */}
               <Image
                 src="/images/hero_learning_desk.jpg"
@@ -190,7 +189,7 @@ export function HeroSection({ onSelectCourse, onOpenAuth, onScrollToCatalog }: H
 
               {/* Conversational Floating Chat Bubbles (inspired by Prospera download (1).jpeg) */}
               <div className="absolute bottom-16 left-4 right-4 sm:right-auto sm:max-w-xs space-y-2 pointer-events-none">
-                
+
                 {/* Chat Bubble 1 */}
                 <div className="bg-white/95 backdrop-blur-md p-3 rounded-2xl rounded-bl-xs border border-white/60 shadow-lg text-xs space-y-1">
                   <div className="flex items-center justify-between text-[10px] text-zinc-500">
