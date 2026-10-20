@@ -44,10 +44,6 @@ export function CourseCatalogSection({ onSelectCourse, onEnrollCourse }: CourseC
       <div className="bg-white rounded-[32px] sm:rounded-[36px] border border-zinc-200/90 shadow-sm p-6 sm:p-8 lg:p-10 mb-8">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div>
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-sky-50 text-sky-800 border border-sky-200/60 mb-2">
-              <BookOpen className="w-3.5 h-3.5 text-sky-600" />
-              <span>Katalog Publik (Terindeks Google · BR-01)</span>
-            </div>
             <h2 className="text-2xl sm:text-3xl font-extrabold text-zinc-950 tracking-tight">
               Pilihan Kursus Praktis Pijar Aksara
             </h2>
@@ -263,12 +259,7 @@ export function CourseCatalogSection({ onSelectCourse, onEnrollCourse }: CourseC
         </div>
       )}
 
-      {/* Footer Notice from PRD */}
-      <div className="mt-8 p-4 bg-sky-50/60 rounded-2xl border border-sky-100 text-center">
-        <p className="text-xs text-sky-900 font-medium">
-          <strong>Catatan Bisnis (BR-01 & BR-06):</strong> Sisa kursi dihitung secara riil dari pendaftaran aktif, selesai, dan menunggu bayar yang belum lewat batas 24 jam.
-        </p>
-      </div>
+
 
     </section>
   );

@@ -21,10 +21,6 @@ export function FeaturesOrganicSection({ onSelectCourse, onScrollToCatalog }: Fe
       {/* Section Header with Pill Badges (inspired by download (1).jpeg) */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
         <div className="max-w-2xl">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200/60 mb-3">
-            <Sparkles className="w-3.5 h-3.5 text-emerald-600" />
-            <span>Fokus Pembelajaran Vokasi</span>
-          </div>
           <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-zinc-950 leading-tight">
             Membantu staf kantor & pelaku UMKM menguasai keahlian siap pakai.
           </h2>
