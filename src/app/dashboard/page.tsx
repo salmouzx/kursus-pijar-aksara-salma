@@ -467,6 +467,25 @@ export default function DashboardPesertaPage({ initialMenu, requiredRole }: Dash
     }
   };
 
+  // Periksa & sinkronkan status pembayaran Mayar langsung ke server Mayar (Live Sync)
+  const handleCheckMayarLive = async (pendaftaranId: string) => {
+    setSimulatingPayId(pendaftaranId);
+    try {
+      const res = await fetch(`/api/pembayaran/mayar?pendaftaranId=${pendaftaranId}`);
+      const data = await res.json();
+      if (res.ok && data.status === "aktif") {
+        alert(data.message || "Pembayaran Mayar berhasil diverifikasi! Kursus Anda telah aktif.");
+        await fetchEnrollments();
+      } else {
+        alert(data.message || "Status di Mayar belum lunas (Unpaid). Silakan selesaikan pembayaran terlebih dahulu.");
+      }
+    } catch (err: any) {
+      alert("Gagal memeriksa status Mayar: " + err.message);
+    } finally {
+      setSimulatingPayId(null);
+    }
+  };
+
   // Metrik & Statistik (Hanya hitung pendaftaran valid yang tidak dibatalkan)
   const validEnrollments = enrollments.filter((e) => e.status !== "dibatalkan");
   const totalEnrolled = validEnrollments.length;
@@ -2163,24 +2182,48 @@ export default function DashboardPesertaPage({ initialMenu, requiredRole }: Dash
 
                         {/* 2. Tombol Utama Mayar: Buka Web Resmi atau Modal Struk Interaktif */}
                         {item.mayar_invoice_id && item.mayar_invoice_id.startsWith("http") ? (
-                          <a
-                            href={item.mayar_invoice_id}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="px-5 py-2.5 rounded-full bg-[#58816D] hover:bg-[#456655] text-white font-extrabold text-xs transition-all shadow-xs flex items-center gap-2 cursor-pointer border border-[#456655]"
-                          >
-                            <CreditCard className="w-3.5 h-3.5 text-white" />
-                            <span>Buka Web Mayar</span>
-                            <ExternalLink className="w-3.5 h-3.5" />
-                          </a>
+                          <>
+                            <a
+                              href={item.mayar_invoice_id}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="px-4 py-2.5 rounded-full bg-[#58816D] hover:bg-[#456655] text-white font-extrabold text-xs transition-all shadow-xs flex items-center gap-1.5 cursor-pointer border border-[#456655]"
+                            >
+                              <CreditCard className="w-3.5 h-3.5 text-white" />
+                              <span>Buka Web Mayar</span>
+                              <ExternalLink className="w-3.5 h-3.5" />
+                            </a>
+                            <button
+                              type="button"
+                              onClick={() => handleCheckMayarLive(item.id)}
+                              disabled={simulatingPayId === item.id}
+                              className="px-4 py-2.5 rounded-full bg-[#1F382B] hover:bg-[#15271e] text-white font-extrabold text-xs transition-all shadow-xs flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
+                              title="Periksa apakah invoice ini sudah lunas di Mayar"
+                            >
+                              <RefreshCw className={`w-3.5 h-3.5 ${simulatingPayId === item.id ? "animate-spin" : ""}`} />
+                              <span>{simulatingPayId === item.id ? "Mengecek..." : "Cek Status Mayar"}</span>
+                            </button>
+                          </>
                         ) : (
-                          <button
-                            onClick={() => setSelectedInvoiceForModal(item)}
-                            className="px-5 py-2.5 rounded-full bg-[#58816D] hover:bg-[#456655] text-white font-extrabold text-xs transition-all shadow-xs flex items-center gap-2 cursor-pointer border border-[#456655]"
-                          >
-                            <CreditCard className="w-3.5 h-3.5 text-white" />
-                            <span>Bayar via Mayar</span>
-                          </button>
+                          <>
+                            <button
+                              onClick={() => setSelectedInvoiceForModal(item)}
+                              className="px-4 py-2.5 rounded-full bg-[#58816D] hover:bg-[#456655] text-white font-extrabold text-xs transition-all shadow-xs flex items-center gap-1.5 cursor-pointer border border-[#456655]"
+                            >
+                              <CreditCard className="w-3.5 h-3.5 text-white" />
+                              <span>Bayar via Mayar</span>
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => handleCheckMayarLive(item.id)}
+                              disabled={simulatingPayId === item.id}
+                              className="px-4 py-2.5 rounded-full bg-[#1F382B] hover:bg-[#15271e] text-white font-extrabold text-xs transition-all shadow-xs flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
+                              title="Periksa apakah invoice ini sudah lunas di Mayar"
+                            >
+                              <RefreshCw className={`w-3.5 h-3.5 ${simulatingPayId === item.id ? "animate-spin" : ""}`} />
+                              <span>{simulatingPayId === item.id ? "Mengecek..." : "Cek Status Mayar"}</span>
+                            </button>
+                          </>
                         )}
                       </div>
                     </div>

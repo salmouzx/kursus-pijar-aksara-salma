@@ -37,7 +37,7 @@ interface EnrollmentRecord {
   status: "menunggu_bayar" | "aktif" | "selesai" | "kedaluwarsa" | "dibatalkan";
   didaftarkan_pada: string;
   batas_bayar?: string;
-  mayar_payment_url?: string;
+  mayar_invoice_id?: string;
   nominal?: number;
 }
 
@@ -51,8 +51,8 @@ export function EnrollmentAction({ kursus }: EnrollmentActionProps) {
   const isFull = kursus.sisa_kursi <= 0;
   const isFree = kursus.harga === 0;
 
-  // Fungsi fetch status pendaftaran peserta secara live dari Supabase
-  const checkEnrollmentStatus = useCallback(async () => {
+  // Fungsi fetch status pendaftaran peserta secara live dari Supabase & Mayar
+  const checkEnrollmentStatus = useCallback(async (manualAlert = false) => {
     if (!currentUser?.id || currentUser.peran !== "peserta") {
       setEnrollment(null);
       return;
@@ -62,7 +62,7 @@ export function EnrollmentAction({ kursus }: EnrollmentActionProps) {
       setIsCheckingEnrollment(true);
       const { data, error } = await supabase
         .from("pendaftaran")
-        .select("id, status, didaftarkan_pada, batas_bayar, mayar_payment_url, nominal")
+        .select("id, status, didaftarkan_pada, batas_bayar, mayar_invoice_id, nominal")
         .eq("kursus_id", kursus.id)
         .eq("peserta_id", currentUser.id)
         .in("status", ["aktif", "selesai", "menunggu_bayar"])
@@ -71,12 +71,41 @@ export function EnrollmentAction({ kursus }: EnrollmentActionProps) {
         .maybeSingle();
 
       if (!error && data) {
+        // Jika status masih menunggu_bayar, sinkronkan langsung dengan Mayar
+        if (data.status === "menunggu_bayar") {
+          try {
+            const mayarRes = await fetch(`/api/pembayaran/mayar?pendaftaranId=${data.id}`);
+            if (mayarRes.ok) {
+              const mayarData = await mayarRes.json();
+              if (mayarData.status === "aktif") {
+                setEnrollment({ ...(data as EnrollmentRecord), status: "aktif" });
+                if (manualAlert) {
+                  alert("Pembayaran Mayar berhasil diverifikasi! Kursus Anda telah aktif.");
+                }
+                return;
+              }
+            }
+          } catch (mErr) {
+            console.warn("Gagal cek status Mayar di background:", mErr);
+          }
+        }
+
         setEnrollment(data as EnrollmentRecord);
+        if (manualAlert) {
+          if (data.status === "menunggu_bayar") {
+            alert("Status pembayaran di Mayar belum terdeteksi lunas. Silakan selesaikan pembayaran terlebih dahulu.");
+          } else {
+            alert(`Status kursus: ${data.status}`);
+          }
+        }
       } else {
         setEnrollment(null);
       }
     } catch (err) {
       console.error("Gagal memeriksa status pendaftaran:", err);
+      if (manualAlert) {
+        alert("Gagal memeriksa status pendaftaran.");
+      }
     } finally {
       setIsCheckingEnrollment(false);
     }
@@ -289,6 +318,16 @@ export function EnrollmentAction({ kursus }: EnrollmentActionProps) {
           >
             <span>Selesaikan Pembayaran Sekarang (Mayar)</span>
             <ArrowRight className="w-4 h-4" />
+          </button>
+
+          <button
+            type="button"
+            onClick={() => checkEnrollmentStatus(true)}
+            disabled={isCheckingEnrollment}
+            className="w-full py-2.5 px-4 rounded-xl bg-white border border-amber-300 hover:bg-amber-100 text-amber-900 font-bold text-xs flex items-center justify-center gap-2 transition-all cursor-pointer shadow-xs disabled:opacity-50"
+          >
+            <RefreshCw className={`w-3.5 h-3.5 ${isCheckingEnrollment ? "animate-spin" : ""}`} />
+            <span>{isCheckingEnrollment ? "Mengecek ke Mayar..." : "Cek Status Pembayaran Mayar"}</span>
           </button>
 
           <Link
