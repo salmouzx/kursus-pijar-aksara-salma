@@ -362,3 +362,20 @@ body {
 .animate-chat-slide {
   animation: chatSlideIn 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
+
+/* Sembunyikan badge & feedback drawer bawaan Netlify */
+netlify-drawer,
+#netlify-drawer-container,
+.netlify-badge,
+iframe[src*="netlify"],
+iframe[title*="Netlify"],
+div[data-netlify-deploy-id],
+[class*="netlify-badge"],
+[id*="netlify-badge"],
+[data-netlify-badge],
+div:has(> iframe[title*="Netlify"]) {
+  display: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
