@@ -50,7 +50,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [isLoading, setIsLoading] = useState(true);
 
   // Ambil profil dari tabel 'profiles' berdasarkan user ID
-  const fetchProfile = async (userId: string, emailFallback: string): Promise<AuthUser | null> => {
+  const fetchProfile = async (
+    userId: string,
+    emailFallback: string,
+    userMeta?: Record<string, any>
+  ): Promise<AuthUser | null> => {
     try {
       const { data, error } = await supabase
         .from("profiles")
@@ -58,12 +62,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         .eq("id", userId)
         .single();
 
+      const metaName = userMeta?.full_name || userMeta?.name || userMeta?.nama_lengkap;
+
       if (error || !data) {
         // Fallback jika profil belum selesai dibuat oleh trigger
         const fallbackUser: AuthUser = {
           id: userId,
           email: emailFallback,
-          nama: emailFallback.split("@")[0],
+          nama: metaName || emailFallback.split("@")[0],
           peran: "peserta",
         };
         setCurrentUser(fallbackUser);
@@ -73,9 +79,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const userObj: AuthUser = {
         id: data.id,
         email: data.email,
-        nama: data.nama_lengkap,
+        nama: data.nama_lengkap || metaName || emailFallback.split("@")[0],
         no_hp: data.no_hp,
-        peran: data.peran,
+        peran: data.peran || "peserta",
       };
 
       setProfile(data as Profile);
@@ -87,23 +93,54 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
+  // Helper untuk membersihkan hash URL dan me-redirect pengguna ke dashboard setelah OAuth login
+  const handleOAuthRedirect = (user: AuthUser | null) => {
+    if (typeof window !== "undefined" && window.location.hash.includes("access_token")) {
+      // Bersihkan hash fragment yang panjang dari address bar
+      window.history.replaceState(null, "", window.location.pathname);
+
+      // Jika mendarat di root / homepage, otomatis alihkan ke dashboard sesuai peran
+      if (window.location.pathname === "/" || window.location.pathname === "") {
+        const role = user?.peran || "peserta";
+        if (role === "admin") {
+          window.location.href = "/admin/dashboard";
+        } else if (role === "instruktur") {
+          window.location.href = "/instruktur/kursus";
+        } else {
+          window.location.href = "/peserta/dashboard";
+        }
+      }
+    }
+  };
+
   useEffect(() => {
     // 1. Cek sesi aktif saat pertama kali load
-    supabase.auth.getSession().then(({ data: { session } }) => {
+    supabase.auth.getSession().then(async ({ data: { session } }) => {
       if (session?.user) {
-        fetchProfile(session.user.id, session.user.email || "").finally(() => {
-          setIsLoading(false);
-        });
+        const userObj = await fetchProfile(
+          session.user.id,
+          session.user.email || "",
+          session.user.user_metadata
+        );
+        handleOAuthRedirect(userObj);
+        setIsLoading(false);
       } else {
         setIsLoading(false);
       }
     });
 
-    // 2. Dengarkan perubahan sesi (login, logout, token refresh)
+    // 2. Dengarkan perubahan sesi (login, logout, token refresh, OAuth callback)
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (_event, session) => {
+      async (event, session) => {
         if (session?.user) {
-          await fetchProfile(session.user.id, session.user.email || "");
+          const userObj = await fetchProfile(
+            session.user.id,
+            session.user.email || "",
+            session.user.user_metadata
+          );
+          if (event === "SIGNED_IN" || (typeof window !== "undefined" && window.location.hash.includes("access_token"))) {
+            handleOAuthRedirect(userObj);
+          }
         } else {
           setCurrentUser(null);
           setProfile(null);
@@ -173,7 +210,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         const { error } = await supabase.auth.signInWithOAuth({
           provider: "google",
           options: {
-            redirectTo: `${window.location.origin}/dashboard`,
+            redirectTo: `${window.location.origin}/peserta/dashboard`,
+            queryParams: {
+              prompt: "select_account",
+              access_type: "offline",
+            },
           },
         });
 
