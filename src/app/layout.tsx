@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Lembaga Kursus Pijar Aksara · Kursus Praktis Perkantoran & UMKM Depok",
+  title: "Kursus Pijar Aksara - Salma",
   description:
     "Aplikasi LMS Lembaga Kursus Pijar Aksara Depok. Pelatihan singkat Excel, Desain Media Sosial Canva, Bahasa Inggris Kerja, dan Dasar Pembukuan UMKM dengan modul terstruktur, kuis otomatis, dan sertifikat resmi.",
   keywords: [
@@ -27,6 +27,8 @@ export const metadata: Metadata = {
   authors: [{ name: "Lembaga Kursus Pijar Aksara" }],
 };
 
+import { AuthProvider } from "@/lib/auth-context";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -37,7 +39,9 @@ export default function RootLayout({
       lang="id"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        <AuthProvider>{children}</AuthProvider>
+      </body>
     </html>
   );
 }

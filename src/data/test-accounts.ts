@@ -13,7 +13,7 @@ export const TEST_ACCOUNTS: TestAccount[] = [
     email: "ratna@pijaraksara.test",
     peran: "admin",
     kataSandi: "Latihan#2026",
-    keterangan: "Admin Utama (Kelola kursus, pembayaran, peran, dashboard)",
+    keterangan: "Admin Utama (Kelola course, pembayaran, peran, dashboard)",
     badge: "Admin",
   },
   {

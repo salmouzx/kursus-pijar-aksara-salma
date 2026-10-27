@@ -2,152 +2,249 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { Sparkles, Compass, ShieldCheck, UserCheck, Menu, X, ArrowUpRight } from "lucide-react";
+import { Sparkles, Menu, X, ArrowUpRight, LogIn, LogOut, BookOpen, LayoutDashboard, Shield, GraduationCap } from "lucide-react";
+import { useAuth } from "@/lib/auth-context";
+import NotificationCenter from "@/components/notification-center";
 
 interface NavbarProps {
-  onOpenAuth: (initialTab?: "login" | "register" | "demo") => void;
-  onScrollToCatalog: () => void;
-  onScrollToFeatures: () => void;
+  onOpenAuth?: (initialTab?: "login" | "register") => void;
+  onScrollToCourse?: () => void;
+  onScrollToMentors?: () => void;
+  onScrollToServices?: () => void;
+  onScrollToTestimonials?: () => void;
+  onScrollToContact?: () => void;
+  currentUser?: { nama: string; email: string; peran: string } | null;
+  onLogout?: () => void;
 }
 
-export function Navbar({ onOpenAuth, onScrollToCatalog, onScrollToFeatures }: NavbarProps) {
+export function Navbar({
+  onOpenAuth,
+  onScrollToCourse,
+  onScrollToMentors,
+  onScrollToServices,
+  onScrollToTestimonials,
+  onScrollToContact,
+  currentUser: propUser,
+  onLogout: propLogout,
+}: NavbarProps) {
+  const { currentUser: authUser, logout: authLogout } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
+  const currentUser = propUser || (authUser ? {
+    nama: authUser.nama,
+    email: authUser.email,
+    peran: authUser.peran,
+  } : null);
+
+  const handleLogout = async () => {
+    if (propLogout) {
+      await propLogout();
+    } else {
+      await authLogout();
+    }
+    if (typeof window !== "undefined") {
+      window.location.href = "/";
+    }
+  };
+
+  const navItems = [
+    {
+      label: "Home",
+      href: "/#home",
+      action: () => window.scrollTo({ top: 0, behavior: "smooth" }),
+    },
+    {
+      label: "Course",
+      href: "/#course",
+      action: onScrollToCourse,
+    },
+    {
+      label: "Mentor",
+      href: "/#mentor",
+      action: onScrollToMentors,
+    },
+    {
+      label: "Services",
+      href: "/#layanan",
+      action: onScrollToServices,
+    },
+    {
+      label: "Testimonials",
+      href: "/#testimoni",
+      action: onScrollToTestimonials,
+    },
+    {
+      label: "Contact",
+      href: "/#kontak",
+      action: onScrollToContact,
+    },
+  ];
+
+  const handleNavClick = (
+    e: React.MouseEvent,
+    item: { label: string; href: string; action?: () => void }
+  ) => {
+    if (typeof window !== "undefined" && window.location.pathname === "/") {
+      if (item.action) {
+        e.preventDefault();
+        item.action();
+      }
+    }
+  };
+
   return (
-    <header className="sticky top-4 z-40 w-full px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
-      <div className="bg-white/90 backdrop-blur-md border border-zinc-200/80 shadow-xs rounded-full px-4 sm:px-6 py-2.5 flex items-center justify-between transition-all">
+    <header className="sticky top-0 z-50 w-full glass-panel border-b border-white/60 shadow-xs transition-all">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-18 flex items-center justify-between gap-4">
+
         {/* Brand Logo */}
-        <Link href="/" className="flex items-center gap-2 group">
-          <div className="w-8 h-8 rounded-full bg-zinc-950 flex items-center justify-center text-white shadow-xs group-hover:scale-105 transition-transform">
-            <Sparkles className="w-4 h-4 text-[#bef264]" />
+        <Link href="/" className="flex items-center gap-2.5 group shrink-0">
+          <div className="w-9 h-9 rounded-2xl bg-[#58816D] flex items-center justify-center text-white shadow-xs group-hover:scale-105 transition-transform">
+            <Sparkles className="w-4 h-4 text-[#EBF3EF]" />
           </div>
           <div className="flex flex-col">
-            <span className="font-bold text-base tracking-tight text-zinc-950 flex items-center gap-1">
+            <span className="font-black text-base sm:text-lg tracking-tight text-[#1F382B] leading-none">
               Pijar Aksara
-              <span className="w-1.5 h-1.5 rounded-full bg-sky-500 inline-block animate-pulse"></span>
             </span>
-            <span className="text-[10px] text-zinc-500 font-medium leading-none">Lembaga Kursus · Depok</span>
           </div>
         </Link>
 
-        {/* Center Pill Nav Links (inspired by Vespa & Prospera) */}
-        <nav className="hidden md:flex items-center gap-1 bg-zinc-100/80 p-1 rounded-full border border-zinc-200/60">
-          <button
-            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-            className="px-4 py-1.5 rounded-full text-xs font-semibold text-zinc-900 bg-white shadow-xs hover:text-black transition-all"
-          >
-            Beranda
-          </button>
-          <button
-            onClick={onScrollToCatalog}
-            className="px-4 py-1.5 rounded-full text-xs font-medium text-zinc-600 hover:text-zinc-950 hover:bg-white/60 transition-all flex items-center gap-1"
-          >
-            <Compass className="w-3.5 h-3.5 text-sky-600" />
-            Katalog Kursus
-          </button>
-          <button
-            onClick={onScrollToFeatures}
-            className="px-4 py-1.5 rounded-full text-xs font-medium text-zinc-600 hover:text-zinc-950 hover:bg-white/60 transition-all"
-          >
-            Keunggulan
-          </button>
-          <button
-            onClick={() => onOpenAuth("demo")}
-            className="px-4 py-1.5 rounded-full text-xs font-medium text-emerald-800 bg-emerald-50 hover:bg-emerald-100/80 transition-all flex items-center gap-1 border border-emerald-200/60"
-          >
-            <UserCheck className="w-3.5 h-3.5 text-emerald-600" />
-            Akun Uji (3 Peran)
-          </button>
+        {/* Center Navigation Links: Home, Course, Mentor, Services, Testimonials, Contact */}
+        <nav className="hidden lg:flex items-center gap-1 text-xs font-semibold text-zinc-700">
+          {navItems.map((item) => (
+            <Link
+              key={item.label}
+              href={item.href}
+              onClick={(e) => handleNavClick(e, item)}
+              className="px-3.5 py-2 rounded-full hover:bg-white/60 hover:text-[#1F382B] transition-colors"
+            >
+              {item.label}
+            </Link>
+          ))}
         </nav>
 
-        {/* Right Action Buttons */}
-        <div className="hidden sm:flex items-center gap-2">
+        {/* Right Section: Active User Session OR Trial Account / Log In / Sign Up */}
+        <div className="flex items-center gap-2.5">
+          {currentUser ? (
+            /* Unified Active Sesi Pill */
+            <div className="flex items-center gap-2 bg-white/70 backdrop-blur-md border border-white/80 p-1.5 pr-2.5 rounded-full shadow-2xs">
+              <div
+                className={`w-7 h-7 rounded-full flex items-center justify-center font-bold text-xs uppercase ${currentUser.peran === "admin"
+                  ? "bg-purple-600 text-white"
+                  : currentUser.peran === "instruktur"
+                    ? "bg-[#58816D] text-white"
+                    : "bg-[#58816D] text-white"
+                  }`}
+              >
+                {currentUser.nama.charAt(0)}
+              </div>
+
+              <div className="flex flex-col text-left leading-tight hidden sm:flex">
+                <span className="text-xs font-bold text-zinc-900 truncate max-w-[120px]">
+                  {currentUser.nama}
+                </span>
+                <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-zinc-500">
+                  {currentUser.peran}
+                </span>
+              </div>
+
+              <div className="h-4 w-px bg-zinc-200 mx-1 hidden sm:block"></div>
+
+              {/* Role specific quick action pill */}
+              {currentUser.peran === "peserta" && (
+                <Link
+                  href="/peserta/dashboard"
+                  className="px-3 py-1 rounded-full text-xs font-bold text-white bg-[#58816D] hover:bg-[#456655] transition-all flex items-center gap-1 shadow-xs"
+                >
+                  <LayoutDashboard className="w-3.5 h-3.5" />
+                  <span>Dashboard</span>
+                </Link>
+              )}
+
+              {currentUser.peran === "instruktur" && (
+                <Link
+                  href="/instruktur/kursus"
+                  className="px-3 py-1 rounded-full text-xs font-bold text-white bg-[#58816D] hover:bg-[#456655] transition-all flex items-center gap-1 shadow-xs border border-[#456655]"
+                >
+                  <BookOpen className="w-3.5 h-3.5 text-[#EBF3EF]" />
+                  <span>Kelola Kursus</span>
+                </Link>
+              )}
+
+              {currentUser.peran === "admin" && (
+                <Link
+                  href="/admin/dashboard"
+                  className="px-3 py-1 rounded-full text-xs font-bold text-white bg-[#58816D] hover:bg-[#456655] transition-all flex items-center gap-1 shadow-xs border border-[#456655]"
+                >
+                  <Shield className="w-3.5 h-3.5 text-[#EBF3EF]" />
+                  <span>Panel Admin</span>
+                </Link>
+              )}
+
+              <NotificationCenter />
+
+              <button
+                onClick={handleLogout}
+                className="p-1.5 rounded-full text-zinc-400 hover:text-rose-600 hover:bg-rose-50/80 transition-colors"
+                title="Keluar"
+              >
+                <LogOut className="w-4 h-4" />
+              </button>
+            </div>
+          ) : (
+            /* Unlogged State: Log In + Sign Up */
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => onOpenAuth?.("login")}
+                className="px-3.5 py-1.5 rounded-full text-xs font-semibold text-zinc-800 hover:bg-white/60 border border-transparent hover:border-white/80 transition-all flex items-center gap-1 cursor-pointer"
+              >
+                <LogIn className="w-3.5 h-3.5 text-zinc-500" />
+                <span>Log In</span>
+              </button>
+
+              <button
+                onClick={() => onOpenAuth?.("register")}
+                className="px-4 py-2 rounded-full text-xs font-bold text-white bg-[#58816D] hover:bg-[#456655] shadow-xs hover:shadow-sm transition-all flex items-center gap-1.5 cursor-pointer"
+              >
+                <span>Sign Up</span>
+                <ArrowUpRight className="w-3.5 h-3.5" />
+              </button>
+            </div>
+          )}
+
+          {/* Mobile Hamburger Toggle */}
           <button
-            onClick={() => onOpenAuth("login")}
-            className="px-4 py-1.5 rounded-full text-xs font-semibold text-zinc-800 hover:bg-zinc-100 border border-transparent hover:border-zinc-200 transition-all"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="lg:hidden p-2 rounded-xl text-zinc-700 hover:bg-white/60 transition-colors border border-zinc-200/60"
+            aria-label="Toggle menu"
           >
-            Masuk
-          </button>
-          <button
-            onClick={() => onOpenAuth("register")}
-            className="px-4 py-1.5 rounded-full text-xs font-semibold text-zinc-950 bg-[#bef264] hover:bg-[#a3e635] shadow-xs hover:shadow-sm transition-all flex items-center gap-1"
-          >
-            Daftar Sekarang
-            <ArrowUpRight className="w-3.5 h-3.5" />
+            {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </button>
         </div>
 
-        {/* Mobile Hamburger */}
-        <button
-          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          className="md:hidden p-2 rounded-full text-zinc-700 hover:bg-zinc-100"
-          aria-label="Toggle menu"
-        >
-          {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-        </button>
       </div>
 
-      {/* Mobile Dropdown Menu */}
+      {/* Mobile Drawer (Home, Course, Mentor, Services, Testimonials, Contact, Trial Account) */}
       {mobileMenuOpen && (
-        <div className="md:hidden mt-2 p-4 bg-white/95 backdrop-blur-lg rounded-3xl border border-zinc-200 shadow-xl space-y-3">
-          <div className="flex flex-col gap-2">
-            <button
-              onClick={() => {
-                window.scrollTo({ top: 0, behavior: "smooth" });
-                setMobileMenuOpen(false);
-              }}
-              className="text-left px-3 py-2 text-sm font-semibold text-zinc-900 rounded-xl hover:bg-zinc-100"
-            >
-              Beranda
-            </button>
-            <button
-              onClick={() => {
-                onScrollToCatalog();
-                setMobileMenuOpen(false);
-              }}
-              className="text-left px-3 py-2 text-sm font-medium text-zinc-700 rounded-xl hover:bg-zinc-100"
-            >
-              Katalog Kursus
-            </button>
-            <button
-              onClick={() => {
-                onScrollToFeatures();
-                setMobileMenuOpen(false);
-              }}
-              className="text-left px-3 py-2 text-sm font-medium text-zinc-700 rounded-xl hover:bg-zinc-100"
-            >
-              Keunggulan
-            </button>
-            <button
-              onClick={() => {
-                onOpenAuth("demo");
-                setMobileMenuOpen(false);
-              }}
-              className="text-left px-3 py-2 text-sm font-semibold text-emerald-800 bg-emerald-50 rounded-xl flex items-center gap-2"
-            >
-              <UserCheck className="w-4 h-4 text-emerald-600" />
-              Coba Akun Uji Mentor (3 Peran)
-            </button>
-          </div>
-          <div className="pt-2 border-t border-zinc-100 flex gap-2">
-            <button
-              onClick={() => {
-                onOpenAuth("login");
-                setMobileMenuOpen(false);
-              }}
-              className="flex-1 py-2 text-xs font-semibold rounded-full border border-zinc-300 text-zinc-800"
-            >
-              Masuk
-            </button>
-            <button
-              onClick={() => {
-                onOpenAuth("register");
-                setMobileMenuOpen(false);
-              }}
-              className="flex-1 py-2 text-xs font-semibold rounded-full bg-[#bef264] text-zinc-950"
-            >
-              Daftar
-            </button>
+        <div className="lg:hidden border-t border-white/60 glass-panel px-4 py-4 space-y-2 animate-in fade-in slide-in-from-top-1 duration-150">
+          <div className="flex flex-col gap-1 text-sm font-semibold text-zinc-800">
+            {navItems.map((item) => (
+              <Link
+                key={item.label}
+                href={item.href}
+                onClick={(e) => {
+                  handleNavClick(e, item);
+                  setMobileMenuOpen(false);
+                }}
+                className="text-left px-3 py-2 rounded-xl hover:bg-white/60 flex items-center justify-between"
+              >
+                <span>{item.label}</span>
+                {item.label === "Course" && (
+                  <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-200">
+                    Populer
+                  </span>
+                )}
+              </Link>
+            ))}
           </div>
         </div>
       )}

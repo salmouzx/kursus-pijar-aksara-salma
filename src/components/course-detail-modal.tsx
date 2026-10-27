@@ -2,20 +2,24 @@
 
 import React from "react";
 import Image from "next/image";
-import { 
-  X, 
-  Clock, 
-  BookOpen, 
-  Users, 
-  CheckCircle2, 
-  Lock, 
-  FileText, 
-  Award, 
-  ShieldAlert, 
+import {
+  X,
+  Clock,
+  BookOpen,
+  Users,
+  CheckCircle2,
+  Lock,
+  FileText,
+  Award,
+  ShieldAlert,
   ArrowRight,
-  Sparkles
+  Sparkles,
+  Flame,
+  Star,
 } from "lucide-react";
 import { Kursus } from "@/data/courses";
+import { getCoursePriceInfo } from "@/lib/course-pricing";
+import { getCourseRatingStats } from "@/lib/course-reviews";
 
 interface CourseDetailModalProps {
   kursus: Kursus | null;
@@ -27,22 +31,28 @@ interface CourseDetailModalProps {
 export function CourseDetailModal({ kursus, isOpen, onClose, onEnroll }: CourseDetailModalProps) {
   if (!isOpen || !kursus) return null;
 
+  // Cek harga terkini dan diskon dari admin
+  const priceInfo = getCoursePriceInfo(kursus.id, kursus.harga, true);
+  const effectivePrice = priceInfo.hargaFinal;
+  const ratingStats = getCourseRatingStats(kursus.id);
+
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-zinc-950/60 backdrop-blur-sm animate-in fade-in duration-200">
-      
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-[#58816D]/60 backdrop-blur-sm animate-in fade-in duration-200">
+
       {/* Modal Dialog (shadcn/ui style with rounded-[32px]) */}
-      <div 
+      <div
         className="relative w-full max-w-3xl bg-white rounded-[32px] border border-zinc-200 shadow-2xl overflow-hidden max-h-[90vh] flex flex-col"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Top Header Bar */}
         <div className="p-6 border-b border-zinc-100 flex items-center justify-between bg-zinc-50/50">
           <div className="flex items-center gap-2">
-            <span className="px-3 py-1 rounded-full text-xs font-bold bg-sky-100 text-sky-900">
+            <span className="px-3 py-1 rounded-full text-xs font-bold bg-[#58816D]/15 text-[#1F382B]">
               {kursus.kategori}
             </span>
-            <span className="text-xs font-mono font-semibold text-zinc-500">
-              Status: Terbit (Publik)
+            <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-extrabold bg-amber-50 text-amber-800 border border-amber-200/80 shadow-2xs">
+              <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-500" />
+              <span>{ratingStats.average.toFixed(1)} ({ratingStats.total} Ulasan)</span>
             </span>
           </div>
 
@@ -56,10 +66,10 @@ export function CourseDetailModal({ kursus, isOpen, onClose, onEnroll }: CourseD
 
         {/* Modal Scrollable Content */}
         <div className="p-6 sm:p-8 overflow-y-auto space-y-6">
-          
+
           {/* Headline & Overview */}
           <div>
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-zinc-950 tracking-tight leading-snug">
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-[#1F382B] tracking-tight leading-snug">
               {kursus.judul}
             </h2>
             <p className="text-sm text-zinc-600 mt-2 leading-relaxed">
@@ -70,29 +80,41 @@ export function CourseDetailModal({ kursus, isOpen, onClose, onEnroll }: CourseD
           {/* Key Metrics Pill Badges */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 p-4 bg-zinc-50 rounded-2xl border border-zinc-200/80">
             <div>
-              <span className="text-[10px] text-zinc-500 block uppercase font-semibold">Biaya</span>
-              <span className="text-sm font-extrabold text-zinc-950">
-                {kursus.harga === 0 ? "Gratis 100%" : `Rp ${kursus.harga.toLocaleString("id-ID")}`}
-              </span>
+              <span className="text-[10px] text-zinc-500 block uppercase font-semibold">Biaya Investasi</span>
+              <div className="flex items-baseline gap-1.5">
+                <span className="text-sm font-extrabold text-[#1F382B]">
+                  {priceInfo.isFree ? "Gratis 100%" : `Rp ${priceInfo.hargaFinal.toLocaleString("id-ID")}`}
+                </span>
+                {priceInfo.isDiscounted && (
+                  <span className="text-[10px] text-zinc-400 line-through">
+                    Rp {priceInfo.hargaAwal.toLocaleString("id-ID")}
+                  </span>
+                )}
+              </div>
+              {priceInfo.isDiscounted && (
+                <span className="text-[9px] font-black text-rose-600 block mt-0.5">
+                  Hemat Rp {priceInfo.hematNominal.toLocaleString("id-ID")} ({priceInfo.diskonPersen}%)
+                </span>
+              )}
             </div>
             <div>
               <span className="text-[10px] text-zinc-500 block uppercase font-semibold">Sisa Kursi</span>
-              <span className={`text-sm font-extrabold ${kursus.sisaKursi <= 2 ? "text-red-600" : "text-zinc-950"}`}>
+              <span className={`text-sm font-extrabold ${kursus.sisaKursi <= 2 ? "text-red-600" : "text-[#1F382B]"}`}>
                 {kursus.sisaKursi} dari {kursus.kuota}
               </span>
             </div>
             <div>
               <span className="text-[10px] text-zinc-500 block uppercase font-semibold">Total Durasi</span>
-              <span className="text-sm font-extrabold text-zinc-950">{kursus.totalDurasiMenit} Menit</span>
+              <span className="text-sm font-extrabold text-[#1F382B]">{kursus.totalDurasiMenit} Menit</span>
             </div>
             <div>
               <span className="text-[10px] text-zinc-500 block uppercase font-semibold">Nilai Lulus</span>
-              <span className="text-sm font-extrabold text-sky-700">Min. {kursus.nilaiLulus}/100</span>
+              <span className="text-sm font-extrabold text-[#58816D]">Min. {kursus.nilaiLulus}/100</span>
             </div>
           </div>
 
           {/* Instructor Box */}
-          <div className="flex items-center gap-3 p-3.5 bg-sky-50/50 rounded-2xl border border-sky-100">
+          <div className="flex items-center gap-3 p-3.5 bg-[#58816D]/10 rounded-2xl border border-[#58816D]/20">
             <div className="relative w-12 h-12 rounded-full overflow-hidden bg-zinc-200 shrink-0">
               <Image
                 src={kursus.instrukturAvatar}
@@ -111,12 +133,12 @@ export function CourseDetailModal({ kursus, isOpen, onClose, onEnroll }: CourseD
           {/* Syllabus / Module List (BR-03 & BR-08 compliance) */}
           <div className="space-y-3">
             <div className="flex items-center justify-between">
-              <h3 className="text-sm font-bold text-zinc-950 uppercase tracking-wider flex items-center gap-1.5">
-                <BookOpen className="w-4 h-4 text-sky-600" />
+              <h3 className="text-sm font-bold text-[#1F382B] uppercase tracking-wider flex items-center gap-1.5">
+                <BookOpen className="w-4 h-4 text-[#58816D]" />
                 <span>Silabus & Struktur Modul ({kursus.modul.length} Modul)</span>
               </h3>
               <span className="text-[11px] text-zinc-500 font-medium">
-                Berurutan per modul (BR-08)
+                Berurutan per modul
               </span>
             </div>
 
@@ -129,11 +151,10 @@ export function CourseDetailModal({ kursus, isOpen, onClose, onEnroll }: CourseD
                     className="p-4 rounded-2xl border border-zinc-200 bg-white hover:border-zinc-300 transition-all flex items-start justify-between gap-4"
                   >
                     <div className="flex items-start gap-3">
-                      <div className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold shrink-0 mt-0.5 ${
-                        isFirst 
-                          ? "bg-sky-600 text-white" 
+                      <div className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold shrink-0 mt-0.5 ${isFirst
+                          ? "bg-[#58816D] text-white"
                           : "bg-zinc-100 text-zinc-600 border border-zinc-200"
-                      }`}>
+                        }`}>
                         {mod.urutan}
                       </div>
                       <div>
@@ -154,11 +175,17 @@ export function CourseDetailModal({ kursus, isOpen, onClose, onEnroll }: CourseD
                         <div className="flex items-center gap-3 text-[10px] text-zinc-400 font-medium mt-2">
                           <span>⏱ {mod.durasiMenit} Menit</span>
                           <span>•</span>
-                          <span>📝 Kuis {mod.soalCount} Soal (Maks 3x coba)</span>
+                          <span>📝 Kuis {mod.soalCount} Soal (Passing Grade 60)</span>
+                          {mod.videoUrl && (
+                            <>
+                              <span>•</span>
+                              <span>🎬 Termasuk Video Pembelajaran</span>
+                            </>
+                          )}
                           {mod.hasPdf && (
                             <>
                               <span>•</span>
-                              <span>📄 Termasuk Lampiran PDF Materi</span>
+                              <span>📄 Dokumen PDF Materi</span>
                             </>
                           )}
                         </div>
@@ -174,7 +201,7 @@ export function CourseDetailModal({ kursus, isOpen, onClose, onEnroll }: CourseD
           <div className="p-4 bg-emerald-50/70 rounded-2xl border border-emerald-200/80 flex items-start gap-3 text-xs text-emerald-950">
             <Award className="w-5 h-5 text-emerald-700 shrink-0 mt-0.5" />
             <div>
-              <strong className="block font-bold">Jaminan Sertifikat Resmi Pijar Aksara (BR-11)</strong>
+              <strong className="block font-bold">Jaminan Sertifikat Resmi Pijar Aksara</strong>
               <span>
                 Peserta yang menyelesaikan seluruh modul dan lulus kuis langsung mendapatkan sertifikat bernomor seri unik format <code>PA-2026-XXXX</code>.
               </span>
@@ -186,10 +213,22 @@ export function CourseDetailModal({ kursus, isOpen, onClose, onEnroll }: CourseD
         {/* Modal Action Footer */}
         <div className="p-6 border-t border-zinc-100 bg-zinc-50/70 flex items-center justify-between gap-4">
           <div>
-            <span className="text-[11px] text-zinc-500 block">Biaya Kursus</span>
-            <span className="text-base sm:text-lg font-black text-zinc-950">
-              {kursus.harga === 0 ? "Gratis" : `Rp ${kursus.harga.toLocaleString("id-ID")}`}
-            </span>
+            <span className="text-[11px] text-zinc-500 block">Biaya Course</span>
+            <div className="flex items-baseline gap-2">
+              <span className="text-base sm:text-lg font-black text-[#1F382B]">
+                {priceInfo.isFree ? "Gratis" : `Rp ${priceInfo.hargaFinal.toLocaleString("id-ID")}`}
+              </span>
+              {priceInfo.isDiscounted && (
+                <>
+                  <span className="text-xs text-zinc-400 line-through">
+                    Rp {priceInfo.hargaAwal.toLocaleString("id-ID")}
+                  </span>
+                  <span className="px-1.5 py-0.5 rounded-full text-[10px] font-black bg-rose-500 text-white">
+                    -{priceInfo.diskonPersen}%
+                  </span>
+                </>
+              )}
+            </div>
           </div>
 
           <div className="flex items-center gap-2">
@@ -204,9 +243,9 @@ export function CourseDetailModal({ kursus, isOpen, onClose, onEnroll }: CourseD
                 onClose();
                 onEnroll(kursus);
               }}
-              className="px-6 py-2.5 rounded-full text-xs font-bold bg-[#bef264] hover:bg-[#a3e635] text-zinc-950 shadow-md hover:shadow-lg transition-all flex items-center gap-1.5"
+              className="px-6 py-2.5 rounded-full text-xs font-bold bg-[#234e36] hover:bg-[#1a3d29] text-white shadow-md hover:shadow-lg transition-all flex items-center gap-1.5 cursor-pointer"
             >
-              <span>Daftar Kursus Ini</span>
+              <span>Daftar Course Ini</span>
               <ArrowRight className="w-4 h-4" />
             </button>
           </div>
