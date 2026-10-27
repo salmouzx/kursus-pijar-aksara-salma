@@ -1,7 +1,7 @@
 import { createClient } from "@supabase/supabase-js";
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "https://mtkcqsxoiqkwotwkesqz.supabase.co";
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "sb_publishable_W4EWvTgsEZWRl5iR8fTFVA_gUhYyw6N";
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "";
 
 // Client-side Supabase instance (akses terbatas sesuai RLS)
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);

@@ -13,7 +13,7 @@ export interface ServerEmailPayload {
 
 export async function sendServerEmail(payload: ServerEmailPayload) {
   const { toEmail, recipientName, type, courseTitle, extraData = {} } = payload;
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "";
 
   let subject = "";
   let htmlContent = "";
